@@ -15,7 +15,7 @@ public class LeaseContract extends Contract {
     public double getTotalPrice() {
         // TODO: price - 50% expected ending value + 7% lease fee.
 
-        // Calculate values necessary for the total lease price formula
+        // Initialize and calculate values necessary for the total lease price formula
         double vehiclePrice = getVehicle().getPrice();
         double expectedEndingValue = 0.5 * vehiclePrice;
         double leaseFee = 0.07 * vehiclePrice;
@@ -33,7 +33,18 @@ public class LeaseContract extends Contract {
     public double getMonthlyPayment() {
         // TODO: amortize getTotalPrice() at 4% annual interest over 36 months.
 
+        // Initialize and calculate values necessary for loan payment formula
+        // Need M(monthly payment), P(total lease amount), r(monthly interest rate), n(# of monthly payments)
+        double totalLeasePrice = getTotalPrice();
+        double annualInterestRate = 0.04;
+        double monthlyInterestRate = annualInterestRate / 12;
+        int numberOfMonths = 36;
 
-        throw new UnsupportedOperationException("MISSION 3: Implement lease payment");
+        // Calculate monthly payment amount
+        double monthlyPayment = (totalLeasePrice * monthlyInterestRate) /
+                (1 - Math.pow((1 + monthlyInterestRate), -numberOfMonths));
+        return monthlyPayment;
+        // round the monthly payment by formatting in UserInterface?
     }
+
 }
