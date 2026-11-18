@@ -18,7 +18,15 @@ public class SalesContract extends Contract {
     @Override
     public double getTotalPrice() {
         // TODO: vehicle price + 5% tax + $100 recording fee + processing fee.
-        throw new UnsupportedOperationException("MISSION 2: Implement sales total");
+        // Los Santos Motors applies the following fees:
+        // Fee Rule
+        // Sales tax 5% of vehicle price
+        // Recording fee $100
+        // Processing fee $295 for vehicles below $10,000
+        // Processing fee $495 for vehicles of $10,000 or more
+        double vehiclePrice = getVehicle().getPrice();
+        double processingFee = vehiclePrice < 10000 ? 295 : 495;
+        return vehiclePrice * 1.05 + 100 + processingFee;
     }
 
     @Override
