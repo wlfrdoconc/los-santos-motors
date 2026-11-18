@@ -1,5 +1,7 @@
 package com.losantos.models;
 
+// Sama - feature/leasing
+
 /** MISSION 3: Calculate the lease amount and its 36-month payment. */
 public class LeaseContract extends Contract {
     public LeaseContract(String date, String customerName, String customerEmail, Vehicle vehicle) {
