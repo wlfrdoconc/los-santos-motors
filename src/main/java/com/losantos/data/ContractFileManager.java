@@ -4,6 +4,8 @@ import com.losantos.models.Contract;
 import java.io.IOException;
 import java.nio.file.Path;
 
+// Thuan - feature/contracts-file, work on ContractFileManager class
+
 /** MISSION 4: Append sale and lease contracts to a single file. */
 public class ContractFileManager {
     private final Path file;
