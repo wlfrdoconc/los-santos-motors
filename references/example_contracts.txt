@@ -1,0 +1,5 @@
+REFERENCE ONLY — do not copy these into data/contracts.csv before running your app.
+The sample lines use pipe separators and no header.
+SALE|20261118|Michael De Santa|michael@example.com|LS1001|2023|Karin|Sultan|Sedan|Black|12000|8000.00|400.00|100.00|295.00|8795.00|NO|0.00
+SALE|20261118|Franklin Clinton|franklin@example.com|LS1004|2026|Vapid|Dominator|Muscle|White|350|24500.00|1225.00|100.00|495.00|26320.00|YES|597.23
+LEASE|20261118|Lamar Davis|lamar@example.com|LS1002|2025|Pegassi|Zentorno|Super|Red|2500|80000.00|40000.00|5600.00|45600.00|1346.29
