@@ -125,12 +125,38 @@ public class UserInterface {
         System.out.println(vehicle);
 
         // 2. Ask for customer details and SALE/LEASE choice.
+        String customerName = safeField("Customer name: ");
+        String customerEmail = safeField("Customer email: ");
 
+        System.out.println("Choose transaction: "); // Refactor later
+        System.out.println("1. Purchase");
+        System.out.println("2. Lease");
 
-        // 3. Validate lease age using java.time.Year.now().getValue().
+        // Stores the customer choice
+        String transactionChoice = ask("Enter choice: ");
 
+        if (transactionChoice.equals("1")) {
+            // Purchase
+            // 4. For a sale, ask about financing.
+        }
+        else if (transactionChoice.equals("2")) {
+            // Lease
+            // 3. Validate lease age using java.time.Year.now().getValue().
 
-        // 4. For a sale, ask about financing.
+            int currentYear = java.time.Year.now().getValue();
+            int vehicleAge = currentYear - vehicle.getYear();
+
+            if (vehicleAge > 3) {
+                System.out.println("Vehicles over 3 years old cannot be leased.");
+                return;
+            }
+
+            System.out.println("Vehicle is eligible for leasing!");
+        }
+        else {
+            System.out.println("Invalid choice, please try again. Returning to the main menu");
+            return;
+        }
 
 
         // 5. Create SalesContract OR LeaseContract (store in Contract variable).
