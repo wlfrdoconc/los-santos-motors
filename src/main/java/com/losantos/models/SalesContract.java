@@ -1,5 +1,7 @@
 package com.losantos.models;
 
+// Jofre - feature/sales, work on SalesContract
+
 /** MISSION 2: Calculate tax, fees, and optional financed monthly payments. */
 public class SalesContract extends Contract {
     private boolean finance;
