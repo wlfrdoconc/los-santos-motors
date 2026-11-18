@@ -110,15 +110,44 @@ public class UserInterface {
 
     private void sellOrLeaseVehicle() throws IOException {
         // MISSION 5: Implement the complete user interaction here.
+
         // 1. Ask for VIN and locate vehicle via findByVin().
+        String vin = ask("Enter Vehicle VIN: ");
+
+        Vehicle vehicle = findByVin(vin);
+
+        if (vehicle == null) {
+            System.out.println("Vehicle is not found.");
+            return;
+        }
+
+        System.out.println("Entered vehicle is found!");
+        System.out.println(vehicle);
+
         // 2. Ask for customer details and SALE/LEASE choice.
+
+
         // 3. Validate lease age using java.time.Year.now().getValue().
+
+
         // 4. For a sale, ask about financing.
+
+
         // 5. Create SalesContract OR LeaseContract (store in Contract variable).
+
+
         // 6. Print getTotalPrice() and getMonthlyPayment().
+
+
         // 7. Save with contractFileManager.saveContract(contract).
+
+
         // 8. Only after successful contract save, update vehicle inventory.
+
+
         // Think about what should happen if updating inventory fails.
+
+
         System.out.println("MISSION 5 is not implemented yet. See README.md.");
     }
 }
