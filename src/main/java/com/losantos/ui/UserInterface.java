@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+// Will - feature/transactions-ui, work on UserInterface
+
 public class UserInterface {
     private final Scanner scanner = new Scanner(System.in);
     private final InventoryFileManager inventoryFileManager;
