@@ -42,8 +42,22 @@ public class ContractFileManager {
             double processingFee = (vehiclePrice < 10000) ? 295.00 : 495.00;
 
             // Building Sales record
-
-        }
+            record = ("Sale" + "|" +
+                    contract.getDate() + "|" +
+                    contract.getCustomerName() + "|" +
+                    contract.getCustomerEmail() + "|" +
+                    // Saves all fields from vehicle.java
+                    v.toFileRecord() + "|" +
+                    String.format(Locale.US, "%.2f", salesTax) + "|" +// Saves sales tax with 2 decimals
+                    String.format(Locale.US, "%.2f", recordingFee) + "|" +// Saves recording fee, 2 decimals
+                    String.format(Locale.US, "%.2f", processingFee) + "|" +// Saves processing fee
+                    // Saves total price from sales contract
+                    String.format(Locale.US, "%.2f", sale.getTotalPrice()) + "|" +
+                    //Saves whether customer chooses financing or not
+                    (sale.isFinance() ? "YES" : "NO") + "|" +
+                    // Saves monthly payment
+                    String.format(Locale.US,"%.2f", sale.getMonthlyPayment()));
+         }
         throw new UnsupportedOperationException("Error, Please try again");
     }
 }
