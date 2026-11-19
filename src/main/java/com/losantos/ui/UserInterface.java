@@ -106,6 +106,10 @@ public class UserInterface {
         System.out.println("Vehicle removed.");
     }
 
+    // LEASE VALIDATION METHOD FROM SAMA ---->
+    // if (!LeaseContract.isEligibleForLease(vehicle)) {
+    //    System.out.println("Vehicle is too old for leasing.");
+    //}
     private void sellOrLeaseVehicle() throws IOException {
         // MISSION 5: Implement the complete user interaction here.
         // 1. Ask for VIN and locate vehicle via findByVin().
