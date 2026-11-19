@@ -58,6 +58,7 @@ public class ContractFileManager {
                     // Saves monthly payment
                     String.format(Locale.US,"%.2f", sale.getMonthlyPayment()));
          }
+        else
         throw new UnsupportedOperationException("Error, Please try again");
     }
 }
