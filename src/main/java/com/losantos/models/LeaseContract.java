@@ -1,6 +1,7 @@
 package com.losantos.models;
 
 // Sama - feature/leasing
+// Merged Sama's changes into my transactions-ui branch
 
 import java.time.LocalDate;
 
