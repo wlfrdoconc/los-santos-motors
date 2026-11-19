@@ -2,6 +2,9 @@ package com.losantos.ui;
 
 import com.losantos.data.ContractFileManager;
 import com.losantos.data.InventoryFileManager;
+import com.losantos.models.Contract;
+import com.losantos.models.LeaseContract;
+import com.losantos.models.SalesContract;
 import com.losantos.models.Vehicle;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -135,14 +138,31 @@ public class UserInterface {
         // Stores the customer choice
         String transactionChoice = ask("Enter choice: ");
 
+        // Finance boolean to reference in #5
+        boolean finance = false;
+
         if (transactionChoice.equals("1")) {
             // Purchase
+
             // 4. For a sale, ask about financing.
+            String financingChoice = ask("Would you like to finance your purchase? (Y/N): ");
+
+            if (financingChoice.equalsIgnoreCase("Y")) {
+                finance = true;
+            }
+            else if (financingChoice.equalsIgnoreCase("N")) {
+                finance = false;
+            }
+            else {
+                System.out.println("Invalid financing choice.");
+                return;
+            }
+
         }
         else if (transactionChoice.equals("2")) {
-            // Lease
-            // 3. Validate lease age using java.time.Year.now().getValue().
+            // Lease - Add Sama's isEligibleForLease() method here later when refactoring
 
+            // 3. Validate lease age using java.time.Year.now().getValue().
             int currentYear = java.time.Year.now().getValue();
             int vehicleAge = currentYear - vehicle.getYear();
 
@@ -158,22 +178,55 @@ public class UserInterface {
             return;
         }
 
-
         // 5. Create SalesContract OR LeaseContract (store in Contract variable).
+        Contract contract;
 
+        String date = java.time.LocalDate.now().toString();
+
+        if (transactionChoice.equals("1")) {
+            // Purchase - Create Jofre's SalesContract
+            contract = new SalesContract(date, customerName, customerEmail, vehicle, finance);
+        }
+        else {
+            // Lease - Create Sama's LeaseContract
+            contract = new LeaseContract(date, customerName, customerEmail, vehicle);
+        }
 
         // 6. Print getTotalPrice() and getMonthlyPayment().
-
+        System.out.printf("Total Price: $%.2f%n", contract.getTotalPrice());
+        System.out.printf("Monthly Payment: $%.2f%n", contract.getMonthlyPayment());
 
         // 7. Save with contractFileManager.saveContract(contract).
+        contractFileManager.saveContract(contract);
 
+        System.out.println("Contract saved successfully!");
 
         // 8. Only after successful contract save, update vehicle inventory.
+        int vehicleIndex = inventory.indexOf(vehicle);
 
+        if (vehicleIndex == -1) {
+            System.out.println("Contract saved, but vehicle could not be removed from inventory.");
+            return;
+        }
+
+        inventory.remove(vehicleIndex);
 
         // Think about what should happen if updating inventory fails.
+        try {
+            // Save the updated inventory to inventory.csv.
+            inventoryFileManager.saveVehicles(inventory);
+        }
+        catch (IOException e) {
+            // Restore the vehicle in memory if the inventory file update fails.
+            inventory.add(vehicleIndex, vehicle);
 
+            System.out.println("Contract saved, but inventory update failed.");
+            System.out.println("Manual reconciliation required. Do not retry this transaction.");
 
-        System.out.println("MISSION 5 is not implemented yet. See README.md.");
+            throw e;
+        }
+
+        System.out.println("Transaction completed successfully!");
     }
+
 }
