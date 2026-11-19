@@ -73,8 +73,9 @@ public class ContractFileManager {
                     contract.getDate() + "|" +
                     contract.getCustomerName() + "|" +
                     contract.getCustomerEmail() + "|" +
-                    v.toFileRecord() + "|" +
+                    v.toFileRecord() + "|" + // Saves all fields from Vehicle.java
                     // Saves lease fee
+                    String.format(Locale.US, "%.2f", endingValue) + "|" +
                     String.format(Locale.US, "%.2f", leaseFee) + "|" +
                     String.format(Locale.US, "%.2f", lease.getTotalPrice()) + "|" +
                     // Saves monthly lease payment
@@ -93,6 +94,6 @@ public class ContractFileManager {
         Files.writeString(file,
                 record + System.lineSeparator(), // Adds line break so next contract gets its own line
                 StandardOpenOption.CREATE, // Creates contract.csv if it doesn't exist
-                StandardOpenOption.APPEND); // Adds new record without deleting older ones.
+                StandardOpenOption.APPEND); // Adds new record without deleting older ones
     }
 }
