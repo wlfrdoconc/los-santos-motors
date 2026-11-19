@@ -159,31 +159,22 @@ public class UserInterface {
 
             if (financingChoice.equalsIgnoreCase("Y")) {
                 finance = true;
-            }
-            else if (financingChoice.equalsIgnoreCase("N")) {
+            } else if (financingChoice.equalsIgnoreCase("N")) {
                 finance = false;
-            }
-            else {
+            } else {
                 System.out.println("Invalid financing choice.");
                 return;
             }
 
-        }
-        else if (transactionChoice.equals("2")) {
-            // Lease - Add Sama's isEligibleForLease() method here later when refactoring
-
-            // 3. Validate lease age using java.time.Year.now().getValue().
-            int currentYear = java.time.Year.now().getValue();
-            int vehicleAge = currentYear - vehicle.getYear();
-
-            if (vehicleAge > 3) {
-                System.out.println("Vehicles over 3 years old cannot be leased.");
+        } else if (transactionChoice.equals("2")) {
+            // 3. Lease - Validate eligibility using Sama's method
+            if (!LeaseContract.isEligibleForLease(vehicle)) {
+                System.out.println("Vehicle is not eligible for leasing.");
                 return;
             }
 
             System.out.println("Vehicle is eligible for leasing!");
-        }
-        else {
+        } else {
             System.out.println("Invalid choice, please try again. Returning to the main menu");
             return;
         }
@@ -196,8 +187,7 @@ public class UserInterface {
         if (transactionChoice.equals("1")) {
             // Purchase - Create Jofre's SalesContract
             contract = new SalesContract(date, customerName, customerEmail, vehicle, finance);
-        }
-        else {
+        } else {
             // Lease - Create Sama's LeaseContract
             contract = new LeaseContract(date, customerName, customerEmail, vehicle);
         }
@@ -212,31 +202,19 @@ public class UserInterface {
         System.out.println("Contract saved successfully!");
 
         // 8. Only after successful contract save, update vehicle inventory.
-        int vehicleIndex = inventory.indexOf(vehicle);
+        List<Vehicle> updatedInventory = new ArrayList<>(inventory);
 
-        if (vehicleIndex == -1) {
-            System.out.println("Contract saved, but vehicle could not be removed from inventory.");
-            return;
-        }
+        updatedInventory.remove(vehicle);
 
-        inventory.remove(vehicleIndex);
-
-        // Think about what should happen if updating inventory fails.
         try {
-            // Save the updated inventory to inventory.csv.
-            inventoryFileManager.saveVehicles(inventory);
-        }
-        catch (IOException e) {
-            // Restore the vehicle in memory if the inventory file update fails.
-            inventory.add(vehicleIndex, vehicle);
-
+            inventoryFileManager.saveVehicles(updatedInventory);
+            inventory = updatedInventory;
+        } catch (IOException e) {
             System.out.println("Contract saved, but inventory update failed.");
             System.out.println("Manual reconciliation required. Do not retry this transaction.");
-
             throw e;
         }
 
         System.out.println("Transaction completed successfully!");
     }
-
 }
