@@ -1,6 +1,7 @@
 package com.losantos.models;
 
 // Jofre - feature/sales, work on SalesContract
+// Merged Jofre's changes into feature/transactions-ui branch
 
 /** MISSION 2: Calculate tax, fees, and optional financed monthly payments. */
 public class SalesContract extends Contract {
