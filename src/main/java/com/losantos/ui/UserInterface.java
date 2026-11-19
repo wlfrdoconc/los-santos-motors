@@ -111,6 +111,15 @@ public class UserInterface {
         System.out.println("Vehicle removed.");
     }
 
+    // FROM SAMA: LEASE VALIDATION METHOD [before creating a lease] ---->
+    // if (!LeaseContract.isEligibleForLease(vehicle)) {
+    //    System.out.println("Vehicle is too old for leasing.");
+    //}
+
+    // FROM SAMA: Formatting for getTotalPrice() and getMonthlyPayment() ---->
+    // System.out.println("Total Payment: $%.2f%n", ???.getTotalPrice());
+    // System.out.println("Monthly Payment: $%.2f%n", ???.getMonthlyPayment());
+
     // Will - UserInterface UI
     private void sellOrLeaseVehicle() throws IOException {
         // MISSION 5: Implement the complete user interaction here.
