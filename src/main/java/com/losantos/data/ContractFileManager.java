@@ -19,7 +19,9 @@ import java.util.Locale;
 public class ContractFileManager {
     private final Path file;
 
-    public ContractFileManager(Path file) { this.file = file; }
+    public ContractFileManager(Path file) {
+        this.file = file;
+    }
 
     public void saveContract(Contract contract) throws IOException {
         // TODO: use instanceof to distinguish SalesContract from LeaseContract.
@@ -56,9 +58,41 @@ public class ContractFileManager {
                     //Saves whether customer chooses financing or not
                     (sale.isFinance() ? "YES" : "NO") + "|" +
                     // Saves monthly payment
-                    String.format(Locale.US,"%.2f", sale.getMonthlyPayment()));
-         }
-        else
-        throw new UnsupportedOperationException("Error, Please try again");
+                    String.format(Locale.US, "%.2f", sale.getMonthlyPayment()));
+        }
+        // Checking for Lease contract
+        else if (contract instanceof LeaseContract lease) {
+            // Gets vehicle original price
+            double vehiclePrice = v.getPrice();
+            // Calculating the expected ending value (50% of original price)
+            double endingValue = vehiclePrice * 0.50;
+            // Calculating lease fee (7% of price)
+            double leaseFee = vehiclePrice * 0.07;
+            // Recording lease
+            record = "Lease" + "|" +
+                    contract.getDate() + "|" +
+                    contract.getCustomerName() + "|" +
+                    contract.getCustomerEmail() + "|" +
+                    v.toFileRecord() + "|" +
+                    // Saves lease fee
+                    String.format(Locale.US, "%.2f", leaseFee) + "|" +
+                    String.format(Locale.US, "%.2f", lease.getTotalPrice()) + "|" +
+                    // Saves monthly lease payment
+                    String.format(Locale.US, "%.2f", lease.getMonthlyPayment());
+        }
+        else {
+            throw new UnsupportedOperationException("Error, Please try again");
+        }
+        // Getting parent folder contracts.csv
+        Path parent = file.getParent();
+        // Checks if parent folder exists, if yes, then leaves unchanged
+        if (parent != null) {
+            Files.createDirectories(parent);
+        }
+        // Writes completed record to contracts.csv
+        Files.writeString(file,
+                record + System.lineSeparator(), // Adds line break so next contract gets its own line
+                StandardOpenOption.CREATE, // Creates contract.csv if it doesn't exist
+                StandardOpenOption.APPEND); // Adds new record without deleting older ones.
     }
 }
