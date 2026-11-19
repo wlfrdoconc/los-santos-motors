@@ -2,6 +2,8 @@ package com.losantos.models;
 
 // Sama - feature/leasing
 
+import java.time.LocalDate;
+
 /** MISSION 3: Calculate the lease amount and its 36-month payment. */
 public class LeaseContract extends Contract {
     public LeaseContract(String date, String customerName, String customerEmail, Vehicle vehicle) {
@@ -45,6 +47,21 @@ public class LeaseContract extends Contract {
                 (1 - Math.pow((1 + monthlyInterestRate), -numberOfMonths));
         return monthlyPayment;
         // round the monthly payment by formatting in UserInterface?
+    }
+
+    // Method: isEligibleForLease()
+    // Checks if a vehicle is of eligible age before creating a LeaseContract object
+    public static boolean isEligibleForLease(Vehicle vehicle) {
+
+        int currentYear = LocalDate.now().getYear();
+        int vehicleAge = currentYear - vehicle.getYear();
+        boolean isEligible = false;
+
+        if (vehicleAge >= 0 && vehicleAge <= 3) {
+            isEligible = true;
+        }
+
+        return isEligible;
     }
 
 }
