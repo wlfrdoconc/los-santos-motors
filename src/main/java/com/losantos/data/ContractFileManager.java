@@ -28,8 +28,8 @@ public class ContractFileManager {
         // TODO: format ALL required common and contract-specific fields separated by '|'.
         // TODO: append one record using Files.writeString(..., CREATE, APPEND).
         // IMPORTANT: do NOT overwrite older records.
-        Vehicle v = contract.getVehicle(); // Gets Vehicle connected to contract
-        // Holds record
+        Vehicle v = contract.getVehicle(); // Gets Vehicle connected to contract, stores into v
+        // String variable to store contract info
         String record;
         // Checks if contract is sales contract
         if (contract instanceof SalesContract sale) {
