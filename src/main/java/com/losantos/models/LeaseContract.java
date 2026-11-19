@@ -6,8 +6,19 @@ import java.time.LocalDate;
 
 /** MISSION 3: Calculate the lease amount and its 36-month payment. */
 public class LeaseContract extends Contract {
+
+    // Constructor:
     public LeaseContract(String date, String customerName, String customerEmail, Vehicle vehicle) {
         super(date, customerName, customerEmail, vehicle);
+
+        // Extra error validation to prevent incorrect lease contract objects
+        if (vehicle == null) {
+            throw new IllegalArgumentException("ERROR: A lease contract requires a vehicle.");
+        }
+
+        if (!isEligibleForLease(vehicle)) {
+            throw new IllegalArgumentException("ERROR: Vehicle age is not eligible for leasing. Must be 3 years old or newer.");
+        }
     }
 
     // Method: getTotalPrice()
