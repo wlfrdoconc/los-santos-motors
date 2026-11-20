@@ -73,7 +73,7 @@ public class ContractFileManager {
                     // Saves monthly payment
                     String.format(Locale.US, "%.2f", sale.getMonthlyPayment()) + "|" +
                     addOnRecord);
-                    String.format(Locale.US, "%.2f", sale.getMonthlyPayment()));
+                    String.format(Locale.US, "%.2f", sale.getMonthlyPayment());
         }
         // Checking for Lease contract
         else if (contract instanceof LeaseContract lease) {

@@ -35,7 +35,7 @@ public class UserInterface {
             System.out.println("2. Search vehicles by VIN");
             System.out.println("3. Add vehicle");
             System.out.println("4. Remove vehicle");
-            System.out.println("5. Sell / Lease vehicle [WORKSHOP MISSION]");
+            System.out.println("5. Sell / Lease vehicle");
             System.out.println("6. Admin Terminal");
             System.out.println("0. Exit");
             String choice = ask("Choose: ");
