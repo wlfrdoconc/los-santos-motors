@@ -11,7 +11,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.List;
 import java.util.Locale;
+import java.util.ArrayList;
+import java.io.BufferedReader;
 
 // Thuan - feature/contracts-file, work on ContractFileManager class
 
@@ -96,4 +99,55 @@ public class ContractFileManager {
                 StandardOpenOption.CREATE, // Creates contract.csv if it doesn't exist
                 StandardOpenOption.APPEND); // Adds new record without deleting older ones
     }
+
+//    public ArrayList<Contract> loadContracts() throws IOException {
+//
+//        ArrayList<Contract> contracts = new ArrayList<>();
+//
+//        if (!Files.exists(file)) {
+//            return contracts;
+//        }
+//
+//        try (BufferedReader reader = Files.newBufferedReader(file)) {
+//
+//            String line;
+//
+//            while ((line = reader.readLine()) != null) {
+//
+//                if (!line.isEmpty()) {
+//
+//                    String[] fields = line.split("\\|");
+//
+//                    String type = fields[0];
+//                    String date = fields[1];
+//                    String customerName = fields[2];
+//                    String customerEmail = fields[3];
+//
+//                    // Reconstruct the vehicle object from the csv
+//                    Vehicle vehicle = new Vehicle(
+//                            fields[4],
+//                            Integer.parseInt(fields[5]),
+//                            fields[6],
+//                            fields[7],
+//                            fields[8],
+//                            fields[9],
+//                            Integer.parseInt(fields[10]),
+//                            Double.parseDouble(fields[11])
+//                    );
+//
+//                    if (type.equalsIgnoreCase("Sale")) {
+//
+//                        boolean finance = fields[16].equalsIgnoreCase("YES");
+//
+//                        contracts.add(new SalesContract(date, customerName, customerEmail, vehicle, finance));
+//
+//                    } else if (type.equalsIgnoreCase("Lease")) {
+//
+//                        contracts.add(new LeaseContract(date, customerName, customerEmail, vehicle));
+//                    }
+//                }
+//            }
+//        }
+//        return contracts;
+//    }
 }
