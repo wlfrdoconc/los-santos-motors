@@ -1,5 +1,11 @@
 package com.losantos.ui;
 
+import com.losantos.data.ContractFileManager;
+import com.losantos.models.Contract;
+import com.losantos.models.SalesContract;
+import com.losantos.models.LeaseContract;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class AdminUserInterface {
@@ -9,7 +15,15 @@ public class AdminUserInterface {
     // Display a menu with options to view all contracts or the last 10 transactions.
     // Return to the main dealership menu when the admin exits.
 
-    private Scanner scanner = new Scanner(System.in);
+    private Scanner scanner;
+    private ContractFileManager contractFileManager;
+
+    // Constructor
+    public AdminUserInterface(Scanner scanner, ContractFileManager contractFileManager) {
+        this.scanner = scanner;
+        this.contractFileManager = contractFileManager;
+    }
+
     private static final String PASSWORD = "DragonBallZ";
 
     // Check for that the entered password is correct
@@ -40,12 +54,10 @@ public class AdminUserInterface {
 
             switch (choice) {
                 case "1":
-                    System.out.println("View all contracts");
-                    // Need ContractFileManager
+                    viewAllContracts();
                     break;
                 case "2":
-                    System.out.println("View last 10 transactions");
-                    // Display last 10 records
+                    viewLastTenTransactions();
                     break;
                 case "0":
                     running = false;
@@ -54,5 +66,76 @@ public class AdminUserInterface {
                     System.out.println("Invalid option. Please try again.");
             }
         }
+    }
+
+    private void viewAllContracts() {
+
+        try {
+            ArrayList<Contract> contracts = contractFileManager.loadContracts();
+
+            if (contracts.isEmpty()) {
+                System.out.println("No contracts found.");
+                return;
+            }
+
+            System.out.println("\n=== ALL CONTRACTS ===");
+
+            for (Contract contract : contracts) {
+                displayContract(contract);
+            }
+
+        } catch (IOException ex) {
+            System.out.println("Error loading contracts: " + ex.getMessage());
+        }
+    }
+
+    private void viewLastTenTransactions() {
+
+        try {
+            ArrayList<Contract> contracts = contractFileManager.loadContracts();
+
+            if (contracts.isEmpty()) {
+                System.out.println("No transactions found.");
+                return;
+            }
+
+            System.out.println("\n=== LAST 10 TRANSACTIONS ===");
+
+            int startIndex = Math.max(0, contracts.size() - 10);
+
+            for (int i = startIndex; i < contracts.size(); i++) {
+                displayContract(contracts.get(i));
+            }
+
+        } catch (IOException ex) {
+            System.out.println("Error loading transactions: " + ex.getMessage());
+        }
+    }
+
+    private void displayContract(Contract contract) {
+
+        System.out.println("\n------------------------------");
+
+        if (contract instanceof SalesContract) {
+            System.out.println("Contract Type: SALE");
+        } else if (contract instanceof LeaseContract) {
+            System.out.println("Contract Type: LEASE");
+        }
+
+        System.out.println("Date: " + contract.getDate());
+        System.out.println("Customer: " + contract.getCustomerName());
+        System.out.println("Email: " + contract.getCustomerEmail());
+
+        System.out.println("Vehicle: " +
+                contract.getVehicle().getMake() + " " +
+                contract.getVehicle().getModel());
+
+        System.out.printf("Total Price: $%,.2f%n",
+                contract.getTotalPrice());
+
+        System.out.printf("Monthly Payment: $%,.2f%n",
+                contract.getMonthlyPayment());
+
+        System.out.println("------------------------------");
     }
 }
