@@ -1,6 +1,7 @@
 package com.losantos.models;
 
 // Jofre - feature/sales, work on SalesContract
+// Merged Jofre's changes into feature/transactions-ui branch
 
 import java.util.ArrayList;
 
