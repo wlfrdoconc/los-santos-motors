@@ -12,6 +12,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Locale;
+import java.util.ArrayList;
+import java.io.BufferedReader;
+import com.losantos.models.AddOn;
 
 // Thuan - feature/contracts-file, work on ContractFileManager class
 
@@ -43,6 +46,16 @@ public class ContractFileManager {
             // ? vehicle price < $10,000, charge 295.00 : charge 495.00
             double processingFee = (vehiclePrice < 10000) ? 295.00 : 495.00;
 
+            // Save upgrades in a single CSV field
+            String addOnRecord = "";
+
+            for (AddOn addOn : sale.getAddOns()) {
+                if (!addOnRecord.isEmpty()) {
+                    addOnRecord += ";";
+                }
+                addOnRecord += addOn.getName() + ":" + addOn.getPrice();
+            }
+
             // Building Sales record
             record = ("Sale" + "|" +
                     contract.getDate() + "|" +
@@ -58,6 +71,8 @@ public class ContractFileManager {
                     //Saves whether customer chooses financing or not
                     (sale.isFinance() ? "YES" : "NO") + "|" +
                     // Saves monthly payment
+                    String.format(Locale.US, "%.2f", sale.getMonthlyPayment()) + "|" +
+                    addOnRecord);
                     String.format(Locale.US, "%.2f", sale.getMonthlyPayment()));
         }
         // Checking for Lease contract
@@ -96,4 +111,83 @@ public class ContractFileManager {
                 StandardOpenOption.CREATE, // Creates contract.csv if it doesn't exist
                 StandardOpenOption.APPEND); // Adds new record without deleting older ones
     }
+
+    public ArrayList<Contract> loadContracts() throws IOException {
+
+        ArrayList<Contract> contracts = new ArrayList<>();
+
+        if (!Files.exists(file)) {
+            return contracts;
+        }
+
+        try (BufferedReader reader = Files.newBufferedReader(file)) {
+
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+
+                if (!line.isEmpty()) {
+
+                    String[] fields = line.split("\\|", -1);
+
+                    String type = fields[0];
+                    String date = fields[1];
+                    String customerName = fields[2];
+                    String customerEmail = fields[3];
+
+                    // Recreate the vehicle saved in the contract
+                    Vehicle vehicle = new Vehicle(
+                            fields[4],
+                            Integer.parseInt(fields[5]),
+                            fields[6],
+                            fields[7],
+                            fields[8],
+                            fields[9],
+                            Integer.parseInt(fields[10]),
+                            Double.parseDouble(fields[11])
+                    );
+
+                    if (type.equalsIgnoreCase("Sale")) {
+
+                        boolean finance = fields[16].equalsIgnoreCase("YES");
+
+                        SalesContract sale = new SalesContract(
+                                date, customerName, customerEmail,
+                                vehicle, finance
+                        );
+
+                        // Restore saved add-ons
+                        if (fields.length > 18 && !fields[18].isEmpty()) {
+
+                            String[] addOnRecords = fields[18].split(";");
+
+                            for (String addOnRecord : addOnRecords) {
+
+                                String[] addOnFields = addOnRecord.split(":");
+
+                                String addOnName = addOnFields[0];
+                                double addOnPrice = Double.parseDouble(addOnFields[1]);
+
+                                // Use AddOn class existing method
+                                sale.addAddOn(new AddOn(addOnName, addOnPrice));
+                            }
+                        }
+
+                        contracts.add(sale);
+
+                    } else if (type.equalsIgnoreCase("Lease")) {
+
+                        LeaseContract lease = new LeaseContract(
+                                date, customerName, customerEmail,
+                                vehicle
+                        );
+
+                        contracts.add(lease);
+                    }
+                }
+            }
+        }
+        return contracts;
+    }
+
 }
