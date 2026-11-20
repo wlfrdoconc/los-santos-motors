@@ -14,6 +14,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.Locale;
 import java.util.ArrayList;
 import java.io.BufferedReader;
+import com.losantos.models.AddOn;
 
 // Thuan - feature/contracts-file, work on ContractFileManager class
 
@@ -45,6 +46,16 @@ public class ContractFileManager {
             // ? vehicle price < $10,000, charge 295.00 : charge 495.00
             double processingFee = (vehiclePrice < 10000) ? 295.00 : 495.00;
 
+            // Save upgrades in a single CSV field
+            String addOnRecord = "";
+
+            for (AddOn addOn : sale.getAddOns()) {
+                if (!addOnRecord.isEmpty()) {
+                    addOnRecord += ";";
+                }
+                addOnRecord += addOn.getName() + ":" + addOn.getPrice();
+            }
+
             // Building Sales record
             record = ("Sale" + "|" +
                     contract.getDate() + "|" +
@@ -60,7 +71,8 @@ public class ContractFileManager {
                     //Saves whether customer chooses financing or not
                     (sale.isFinance() ? "YES" : "NO") + "|" +
                     // Saves monthly payment
-                    String.format(Locale.US, "%.2f", sale.getMonthlyPayment()));
+                    String.format(Locale.US, "%.2f", sale.getMonthlyPayment()) + "|" +
+                    addOnRecord);
         }
         // Checking for Lease contract
         else if (contract instanceof LeaseContract lease) {
@@ -115,7 +127,7 @@ public class ContractFileManager {
 
                 if (!line.isEmpty()) {
 
-                    String[] fields = line.split("\\|");
+                    String[] fields = line.split("\\|", -1);
 
                     String type = fields[0];
                     String date = fields[1];
@@ -136,13 +148,29 @@ public class ContractFileManager {
 
                     if (type.equalsIgnoreCase("Sale")) {
 
-                        boolean finance =
-                                fields[16].equalsIgnoreCase("YES");
+                        boolean finance = fields[16].equalsIgnoreCase("YES");
 
                         SalesContract sale = new SalesContract(
                                 date, customerName, customerEmail,
                                 vehicle, finance
                         );
+
+                        // Restore saved add-ons
+                        if (fields.length > 18 && !fields[18].isEmpty()) {
+
+                            String[] addOnRecords = fields[18].split(";");
+
+                            for (String addOnRecord : addOnRecords) {
+
+                                String[] addOnFields = addOnRecord.split(":");
+
+                                String addOnName = addOnFields[0];
+                                double addOnPrice = Double.parseDouble(addOnFields[1]);
+
+                                // Use AddOn class existing method
+                                sale.addAddOn(new AddOn(addOnName, addOnPrice));
+                            }
+                        }
 
                         contracts.add(sale);
 
